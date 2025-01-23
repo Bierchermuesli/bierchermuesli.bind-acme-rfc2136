@@ -1,0 +1,10 @@
+---
+# handlers file for bind-certbot
+- name: Check and Restart BIND
+  command: named-checkconf
+  notify: Restart BIND
+
+- name: Restart BIND
+  service:
+    name: bind9
+    state: restarted

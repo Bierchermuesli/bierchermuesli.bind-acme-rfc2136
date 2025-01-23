@@ -1,0 +1,17 @@
+# {{ ansible_managed }}
+key "certbot." {
+        algorithm hmac-sha512;
+        secret "{{ bind_acme_rndc_key }}";
+};
+
+{% for zone in bind_acme_zones %}
+# {{zone }}
+zone "_acme-challenge.{{zone}}" {
+        type master;
+        file "/var/lib/bind/_acme-challenge.{{zone}}.db";
+        check-names warn;
+        update-policy {
+                grant certbot. name _acme-challenge.{{zone}}. txt;
+        };
+};
+{% endfor %}

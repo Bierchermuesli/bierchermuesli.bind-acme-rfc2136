@@ -1,0 +1,15 @@
+;  ̣{{ ansible_managed }}  or certbot by rndc
+$ORIGIN .
+$TTL 43200      ; 12 hours
+_acme-challenge.{{zone_name}} IN SOA {{zone_name}}. hostmaster.{{zone_name}}. (
+                                {{ "%Y%m%d" | strftime }}{{bind_acme_zone_serial}} ; serial
+                                28800      ; refresh (8 hours)
+                                7200       ; retry (2 hours)
+                                604800     ; expire (1 week)
+                                86400      ; minimum (1 day)
+                                )
+
+{% for ns in bind_acme_nameservers %}
+                        NS      {{ns}}.
+{% endfor %}
+                        TXT     "just for debugging"

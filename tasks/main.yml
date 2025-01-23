@@ -1,0 +1,42 @@
+---
+# tasks file for bind-certbot
+- name: Create DNS zone file from template
+  template:
+    src: zone.j2
+    dest: /var/lib/bind/_acme-challenge.{{ zone_name }}.db
+  loop: "{{ bind_acme_zones }}"
+  #when: not lookup('file', '/etc/bind/zones/{ item }}.db', errors='ignore')
+  loop_control:
+    loop_var: zone_name
+  notify: Check and Restart BIND
+
+- name: Add DNS zone to BIND configuration
+  template:
+    src: named.conf.certbot.j2
+    dest: /etc/bind/named.conf.certbot
+    owner: "{{ bind_owner }}"
+    group: "{{ bind_group }}"
+    mode: 0640
+  notify: Check and Restart BIND
+
+- name: Create dns_rfc2136_credentials file
+  template:
+    src: dns_rfc2136_credentials.txt.j2
+    dest: /etc/letsencrypt/dns_rfc2136_credentials.txt
+    owner: root
+    group: root
+    mode: 0600
+
+- name: Include certbot configuration in named.conf
+  lineinfile:
+    path: /etc/bind/named.conf
+    line: 'include "/etc/bind/named.conf.certbot";'
+    insertafter: EOF
+  notify: Check and Restart BIND
+
+- name: Ensure BIND is running
+  service:
+    name: bind9
+    state: started
+    enabled: yes
+

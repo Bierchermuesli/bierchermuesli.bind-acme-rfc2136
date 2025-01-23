@@ -1,0 +1,15 @@
+---
+# defaults file for bind-certbot
+bind_acme_zones:
+  - example.com
+
+
+bind_acme_rndc_key: KEY_UNSET
+
+bind_acme_zone_serial: 00
+
+bind_acme_nameservers:
+  - 127.0.0.1
+
+bind_owner: root
+bind_group: bind
