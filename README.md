@@ -1,9 +1,7 @@
 Role Name
 =========
 
-This simply creates RFC2136 conform zones - to be precisen a _acme-challenge.zone.tld delegation. This Zone can be secure updated with [certbot](https://certbot-dns-rfc2136.readthedocs.io/en/stable/)
-
-This role can also be combined with https://github.com/geerlingguy/ansible-role-certbot or https://github.com/geerlingguy/ansible-role-certbot
+This role create a batch of RFC2136 conform zones for DNS01 Challange. It creats for each Domain a dedicated `_acme-challenge.example.com` sub delegation. This Zone later secure updated rfc2136 conform ACME scripts, for example the [certbot](https://certbot-dns-rfc2136.readthedocs.io/en/stable/) `--dns-rfc2136` flag.
 
 
 Requirements
@@ -26,22 +24,19 @@ afterwards you can order certificates with e.g.
 certbot  --dns-rfc2136 --dns-rfc2136-credentials /etc/letsencrypt/dns_rfc2136_credentials.txt -d example.com -d *.example.com -i nginx --dns-rfc2136-propagation-seconds 20 --key-type ecdsa -i nginx
 ```
 
+Or this role can also be combined with [geerlingguy.certbot](https://github.com/geerlingguy/ansible-role-certbot) or [geerlingguy.certbot](https://github.com/geerlingguy/ansible-role-certbot)
+
 Role Variables
 --------------
 
 see defaults/main.yml
-
-Dependencies
-------------
-
-nothing fancy
 
 Example Playbook
 ----------------
 
 Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
 ```
-    - hosts: servers
+    - hosts: this-box
       roles:
          - bind-acme-zone
       vars:
